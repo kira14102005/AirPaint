@@ -14,7 +14,7 @@ class handDetectorObj():
         self.hands = self.handObj.Hands()
         self.drawObj  = mp.solutions.drawing_utils
         self.handObj = mp.solutions.hands
-        self.hands = self.handObj.Hands(self.mode, self.maxHands, self.detectionCon, self.trackCon)
+        self.hands = self.handObj.Hands(mode=self.mode, maxHands = self.maxHands, detectionCon= self.detectionCon, trackCon=self.trackCon)
         self.drawObj  = mp.solutions.drawing_utils
 
     def detectHands(self, img, toDraw=True):
@@ -26,6 +26,17 @@ class handDetectorObj():
                     self.drawObj.draw_landmarks(img, hand, self.handObj.HAND_CONNECTIONS)
         return img
 
+    def findHandPosition(self, img, handIdx=0, toDraw=True):
+        lmList = []
+        if self.results.multi_hand_landmarks:
+            myHand = self.results.multi_hand_landmarks[handIdx]
+            for id, lm in enumerate(myHand.landmark):
+                h, w, c = img.shape
+                landMark_x, landMark_y = int(lm.x*w), int(lm.y*h)
+                lmList.append([id, landMark_x, landMark_y])
+                if toDraw:
+                    cv2.circle(img, (landMark_x, landMark_y), 15, (255, 0, 255), cv2.FILLED)
+        return lmList
 
 
 # while True:
