@@ -1,0 +1,1 @@
+#STarting to make a HandTracking Module using CV2 and MediaPipe
