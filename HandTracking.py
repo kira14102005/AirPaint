@@ -9,5 +9,6 @@ hands = handObj.Hands()
 while True:
     success, img = cap.read()
     imRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    result = hands.process(imRGB)
     cv2.imshow("Image", img) 
     cv2.waitKey(1)
