@@ -25,6 +25,10 @@ while True:
     lmrkArray = detector.findHandPosition(img , toDraw=False)
     if(len(lmrkArray) != 0):
         print(lmrkArray)
+
+        #TIp of the index and middle finger
+        x1, y1 = lmrkArray[8][1], lmrkArray[8][2]
+        x2, y2 = lmrkArray[12][1], lmrkArray[12][2]
     #set the header image
     img[0:125, 0:1280] = currHeader
     cv2.imshow("Feed", img)

@@ -16,6 +16,7 @@ class handDetectorObj():
         self.handObj = mp.solutions.hands
         self.hands = self.handObj.Hands()
         self.drawObj  = mp.solutions.drawing_utils
+        self.fingerTips = [4, 8, 12, 16, 20]
 
     def detectHands(self, img, toDraw=True):
         imRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
