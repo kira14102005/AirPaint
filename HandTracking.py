@@ -21,11 +21,13 @@ while True:
                 h, w, c = img.shape
                 landMark_x, landMark_y = int(lm.x*w), int(lm.y*h)
                 print(id, landMark_x, landMark_y)
+                if id == 0: #To draw a circle on the tip of the bottom of the hand palm
+                    cv2.circle(img, (landMark_x, landMark_y), 15, (255, 0, 255), cv2.FILLED)
                 
             drawObj.draw_landmarks(img, hand, handObj.HAND_CONNECTIONS)
     curTime = time.time()
     fps = 1/(curTime-prevTime)
     prevTime = curTime
-    cv2.putText(img, f"FPS: {int(fps)}", (10, 70), cv2.FONT_HERSHEY_COMPLEX, 3, (255, 0, 255), 3)
+    cv2.putText(img, f"FPS: {int(fps)}", (10,  70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 0, 255), 3)
     cv2.imshow("Image", img) 
     cv2.waitKey(1)
