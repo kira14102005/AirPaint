@@ -11,10 +11,10 @@ class handDetectorObj():
         self.trackCon = trackCon
 
         self.handObj = mp.solutions.hands
-        self.hands = self.handObj.Hands(self.mode, self.maxHands, self.detectionCon, self.trackCon)
+        self.hands = self.handObj.Hands()
         self.drawObj  = mp.solutions.drawing_utils
         self.handObj = mp.solutions.hands
-        self.hands = self.handObj.Hands()
+        self.hands = self.handObj.Hands(self.mode, self.maxHands, self.detectionCon, self.trackCon)
         self.drawObj  = mp.solutions.drawing_utils
 
     def detectHands(self, img, toDraw=True):
@@ -24,6 +24,7 @@ class handDetectorObj():
             for hand in result.multi_hand_landmarks: #For each hand detected
                 if toDraw:
                     self.drawObj.draw_landmarks(img, hand, self.handObj.HAND_CONNECTIONS)
+        return img
 
 
 
@@ -53,11 +54,12 @@ def main():
     prevTime = 0
     curTime = 0
     cap = cv2.VideoCapture(0)
-
+    detect = handDetectorObj()
     while True:
         success, img = cap.read()
         curTime = time.time()
-        fps = 1/(curTime-prevTime)
+        img = detect.detectHands(img)
+        fps = 1/(curTime-prevTime)    
         prevTime = curTime
         cv2.putText(img, f"FPS: {int(fps)}", (10,  70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 0, 255), 3)
         cv2.imshow("Image", img) 
