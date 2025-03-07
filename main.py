@@ -24,11 +24,23 @@ while True:
     img = detector.detectHands(img)
     lmrkArray = detector.findHandPosition(img , toDraw=False)
     if(len(lmrkArray) != 0):
-        print(lmrkArray)
+        # print(lmrkArray)
 
         #TIp of the index and middle finger
         x1, y1 = lmrkArray[8][1], lmrkArray[8][2]
         x2, y2 = lmrkArray[12][1], lmrkArray[12][2]
+    
+        fingers = detector.noOfFingersUp()
+        print(fingers)
+
+        if(fingers[1] and fingers[2]):
+            cv2.rectangle(img, (x1,y1-25), (x2,y2+25), (255,0,255), cv2.FILLED)
+            print("Selection Mode")
+            #Checking for the header change
+        
+        if(fingers[1] and fingers[2] == False):
+            cv2.circle(img, (x1,y1), 15, (255,0,255), cv2.FILLED)
+            print("Drawing Mode")
     #set the header image
     img[0:125, 0:1280] = currHeader
     cv2.imshow("Feed", img)
