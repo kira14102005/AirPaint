@@ -5,7 +5,7 @@ import HandTrackingModule as hm
 import os
 import math
 
-directory = "CanvaImage"
+directory = "CanvaImage\Header"
 myList  = os.listdir(directory)
 print(myList)
 headerImages = []
@@ -18,5 +18,8 @@ cap.set(3, 1280)
 cap.set(4, 720)
 while True:
     success, img = cap.read()
+    #set the header image
+    # currHeader.resize((1280, 125))
+    img[0:125, 0:1280] = currHeader
     cv2.imshow("Feed", img)
     cv2.waitKey(1)
