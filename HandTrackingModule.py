@@ -17,6 +17,14 @@ class handDetectorObj():
         self.hands = self.handObj.Hands()
         self.drawObj  = mp.solutions.drawing_utils
 
+    def detectHands(self, img, toDraw=True):
+        imRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        result = self.hands.process(imRGB)
+        if result.multi_hand_landmarks:
+            for hand in result.multi_hand_landmarks: #For each hand detected
+                if toDraw:
+                    self.drawObj.draw_landmarks(img, hand, self.handObj.HAND_CONNECTIONS)
+
 
 
 # while True:
