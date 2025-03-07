@@ -9,7 +9,7 @@ class handDetectorObj():
         self.maxHands = maxHands
         self.detectionCon = detectionCon
         self.trackCon = trackCon
-
+        
         self.handObj = mp.solutions.hands
         self.hands = self.handObj.Hands()
         self.drawObj  = mp.solutions.drawing_utils
@@ -27,16 +27,31 @@ class handDetectorObj():
         return img
 
     def findHandPosition(self, img, handIdx=0, toDraw=True):
-        lmList = []
+        self.lmList = []
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handIdx]
             for id, lm in enumerate(myHand.landmark):
                 h, w, c = img.shape
                 landMark_x, landMark_y = int(lm.x*w), int(lm.y*h)
-                lmList.append([id, landMark_x, landMark_y])
+                self.lmList.append([id, landMark_x, landMark_y])
                 if toDraw:
                     cv2.circle(img, (landMark_x, landMark_y), 15, (255, 0, 255), cv2.FILLED)
-        return lmList
+        return self.lmList
+    
+    def noOfFingersUp(self):
+        fingers = []
+        #Thumb
+        if self.lmList[4][1] < self.lmList[3][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+        #4 Fingers
+        for id in range(1, 5):
+            if self.lmList[id*4][2] < self.lmList[id*4 - 2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+        return fingers
 
 def main():
     prevTime = 0
