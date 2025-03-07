@@ -16,6 +16,8 @@ while True:
     # print(result.multi_hand_landmarks)  #To check if the hand is detected or not
     if result.multi_hand_landmarks:
         for hand in result.multi_hand_landmarks: #For each hand detected
+            for id, lm in enumerate(hand.landmark):
+               print(id, lm)
             drawObj.draw_landmarks(img, hand, handObj.HAND_CONNECTIONS)
     curTime = time.time()
     fps = 1/(curTime-prevTime)
