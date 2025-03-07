@@ -6,9 +6,14 @@ import time
 cap = cv2.VideoCapture(0)
 handObj = mp.solutions.hands
 hands = handObj.Hands()
+drawObj  = mp.solutions.drawing_utils
 while True:
     success, img = cap.read()
     imRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     result = hands.process(imRGB)
+    # print(result.multi_hand_landmarks)  #To check if the hand is detected or not
+    if result.multi_hand_landmarks:
+        for hand in result.multi_hand_landmarks: #For each hand detected
+            drawObj.draw_landmarks(img, hand, handObj.HAND_CONNECTIONS)
     cv2.imshow("Image", img) 
     cv2.waitKey(1)
