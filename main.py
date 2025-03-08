@@ -8,6 +8,7 @@ import math
 #########
 brushWeight = 15
 prev_x, prev_y = 0, 0
+eraseThickness = 50
 #########
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
@@ -59,14 +60,19 @@ while True:
                     drawColor = (255, 0 ,0) #blue
                 elif 1050 < x1 < 1160:
                     currHeader = headerImages[4]
+                    drawColor = (0,0,0) #Black
         
         if(fingers[1] and fingers[2] == False):
             cv2.circle(img, (x1,y1), 15, drawColor, cv2.FILLED)
             print("Drawing Mode")
             if(prev_x == 0 and prev_y == 0):
                 prev_x, prev_y = x1, y1
-            cv2.line(img, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
-            cv2.line(imgCanvas, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
+            if(drawColor == (0,0,0)):
+                cv2.line(img, (prev_x,prev_y), (x1,y1), drawColor, eraseThickness)
+                cv2.line(imgCanvas, (prev_x,prev_y), (x1,y1), drawColor, eraseThickness)
+            else:
+                cv2.line(img, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
+                cv2.line(imgCanvas, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
             prev_x, prev_y = x1, y1
     #set the header image
     img[0:125, 0:1280] = currHeader
