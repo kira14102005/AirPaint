@@ -36,6 +36,17 @@ while True:
         if(fingers[1] and fingers[2]):
             cv2.rectangle(img, (x1,y1-25), (x2,y2+25), (255,0,255), cv2.FILLED)
             print("Selection Mode")
+            if y1 < 125:
+                if 200 < x1 < 280:
+                    currHeader = headerImages[0]
+                elif 435 < x1 < 510:
+                    currHeader = headerImages[1]
+                elif 635 < x1 < 715:
+                    currHeader = headerImages[2]
+                elif 850 < x1 < 975:
+                    currHeader = headerImages[3]
+                elif 1050 < x1 < 1160:
+                    currHeader = headerImages[4]
             #Checking for the header change
         
         if(fingers[1] and fingers[2] == False):
