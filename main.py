@@ -4,6 +4,10 @@ import time
 import HandTrackingModule as hm
 import os
 import math
+#########
+brushWeight = 15
+prev_x, prev_y = 0, 0
+#########
 
 directory = "CanvaImage\Header"
 myList  = os.listdir(directory)
@@ -36,6 +40,7 @@ while True:
 
         if(fingers[1] and fingers[2]):
             cv2.rectangle(img, (x1,y1-25), (x2,y2+25), drawColor, cv2.FILLED)
+
             print("Selection Mode")
             if y1 < 125:
                 if 200 < x1 < 280:
@@ -52,11 +57,14 @@ while True:
                     drawColor = (0, 0 ,255) #blue
                 elif 1050 < x1 < 1160:
                     currHeader = headerImages[4]
-            #Checking for the header change
         
         if(fingers[1] and fingers[2] == False):
             cv2.circle(img, (x1,y1), 15, drawColor, cv2.FILLED)
             print("Drawing Mode")
+            if(prev_x == 0 and prev_y == 0):
+                prev_x, prev_y = x1, y1
+            cv2.line(img, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
+            prev_x, prev_y = x1, y1
     #set the header image
     img[0:125, 0:1280] = currHeader
     cv2.imshow("Feed", img)
