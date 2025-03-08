@@ -63,3 +63,118 @@ docker run -it motionink
 ✅ **Docker** → Not ideal for GUI apps but great if you want a **cloud-deployable backend** version.
 
 🚀 **If you want MotionInk to be cross-platform, you must recompile `MotionInk.exe` separately on each OS.**
+
+
+# PyInstaller vs Docker: Multiple Instances and Key Differences
+
+## 🔹 Can You Run Multiple Instances?
+
+| Feature              | **Docker Containers** | **PyInstaller `.exe` App** |
+|---------------------|----------------------|---------------------------|
+| **Multiple Instances** | ✅ Can run multiple containers from the same image | ❌ Can run only one instance per user session |
+| **Scalability** | ✅ Easily scalable (run `docker run` multiple times) | ❌ Must manually open multiple `.exe` windows |
+| **Resource Management** | ✅ Each container gets isolated CPU/memory | ❌ All `.exe` instances share the same process |
+| **Portability** | ✅ Run anywhere with Docker installed | ❌ Must rebuild `.exe` for different OSs |
+| **Use Case** | Microservices, cloud apps, server-side processes | GUI desktop apps |
+
+---
+
+## 🔹 Why Can Docker Run Multiple Instances?
+Docker containers are **stateless** and **isolated**.
+- You can start **multiple copies of the same image** at the same time.
+- Each instance has its **own process ID (PID), memory, and networking**.
+- Example:
+    ```bash
+    docker run -d --name instance1 motionink
+    docker run -d --name instance2 motionink
+    ```
+    - This runs **two separate containers** from the **same image**.
+
+---
+
+## 🔹 Why Can’t `.exe` Run Multiple Instances?
+- A **PyInstaller-generated `.exe`** is just a **single application instance**.
+- If you try to open the `.exe` twice:
+  - It **shares the same memory and process**.
+  - It **may not allow multiple instances** (depends on the app logic).
+- If you need multiple instances, you’d have to **manually open** multiple `.exe` windows.
+
+---
+
+# 🔹 Docker Images & Isolation Explained
+
+## 🔹 What is a Docker Image?
+A **Docker image** is like a **blueprint** for running a container. It contains everything needed to run an application, including:
+- The **base operating system** (e.g., Ubuntu, Alpine)
+- The **application code** (e.g., MotionInk)
+- The **required dependencies** (Python, OpenCV, MediaPipe)
+- **Configurations and environment settings**
+
+When you run a Docker image, it creates a **Docker container**, which is an **isolated instance of the application**.
+
+---
+
+## 🔹 Where Do Docker Containers Run?
+Docker containers **run on the host OS** but are **isolated** from other processes. Unlike Virtual Machines (VMs), they **do not have a separate OS kernel**. Instead, they **share the host OS kernel** but keep applications separate using containerization techniques.
+
+---
+
+## 🔹 How are Docker Containers Isolated if They Use the Host Kernel?
+Docker **containers are isolated** using three key technologies in Linux:
+
+1️⃣ **Namespaces** → Provide process isolation  
+   - Each container gets its own **process tree, network interfaces, and mounts**.  
+   - This prevents a container from seeing or interfering with other processes on the host.
+
+2️⃣ **Control Groups (cgroups)** → Manage resource allocation  
+   - Limit **CPU, memory, and disk usage** for each container.  
+   - Prevents one container from consuming all resources.
+
+3️⃣ **Union Filesystem (OverlayFS)** → Efficient file management  
+   - Containers share common files, but each has its **own writable layer**.
+
+---
+
+## 🔹 How is Docker Different from a Virtual Machine (VM)?
+
+| Feature          | **Docker Container** | **Virtual Machine (VM)** |
+|-----------------|--------------------|-------------------------|
+| **OS Kernel**   | Shares host kernel | Each VM has its own OS kernel |
+| **Startup Time** | **Seconds** (lightweight) | **Minutes** (heavy) |
+| **Resource Usage** | **Minimal** (low overhead) | **High** (allocates full OS resources) |
+| **Isolation** | Process-level isolation | Full OS isolation |
+| **Use Case** | Microservices, cloud apps | Running multiple OSs on one machine |
+
+---
+
+## 🔹 Example: Running a Python App in Docker
+Instead of installing Python, OpenCV, and MediaPipe on your system, you can run everything inside a **Docker container**:
+
+### **1️⃣ Create a `Dockerfile`**
+```dockerfile
+FROM python:3.9  # Use Python base image
+
+WORKDIR /app  # Set working directory
+
+COPY . /app  # Copy project files into the container
+
+RUN pip install opencv-python mediapipe numpy  # Install dependencies
+
+CMD ["python", "tkinterApp.py"]  # Start the app when the container runs
+```
+
+### **2️⃣ Build and Run the Container**
+```bash
+docker build -t motionink .
+docker run -it motionink
+```
+🚀 **Now the app runs inside an isolated container, without installing anything on your host!**
+
+---
+
+## 🔹 Summary
+✔ **Docker Images** → Contain everything needed to run an app.  
+✔ **Containers Use Host Kernel** → But are isolated using **namespaces & cgroups**.  
+✔ **Better Than VMs** → Faster, lighter, and more efficient.  
+
+✅ **So yes, you can run multiple Docker containers from one image, but not multiple `.exe` instances as easily!** 🚀
