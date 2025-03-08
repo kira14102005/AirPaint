@@ -76,9 +76,16 @@ while True:
                 cv2.line(img, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
                 cv2.line(imgCanvas, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
             prev_x, prev_y = x1, y1
+
+    gray_img = cv2.cvtColor(imgCanvas, cv2.COLOR_BGR2GRAY)  #Convert the canvas to gray
+    _, imgInv = cv2.threshold(gray_img, 50, 255, cv2.THRESH_BINARY_INV)  #Convert the gray image to inverted image binary
+    imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)  #Convert the binary image to RGB
+    img = cv2.bitwise_and(img, imgInv)   #Add the Black pixels to the image where we drew on the canvas
+    img = cv2.bitwise_or(img, imgCanvas)        #Overlay the color's actual RGB values to the absolute black pixels
+
     #set the header image
     img[0:125, 0:1280] = currHeader
-    img = cv2.addWeighted(img, 0.5, imgCanvas, 0.5, 0)
+    # img = cv2.addWeighted(img, 0.5, imgCanvas, 0.5, 0)
     cv2.imshow("Feed", img)
     cv2.imshow("Canvas", imgCanvas)
     cv2.waitKey(1)
