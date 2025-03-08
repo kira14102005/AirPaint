@@ -3,11 +3,13 @@ import mediapipe as mp
 import time
 import HandTrackingModule as hm
 import os
+import numpy as np
 import math
 #########
 brushWeight = 15
 prev_x, prev_y = 0, 0
 #########
+imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
 directory = "CanvaImage\Header"
 myList  = os.listdir(directory)
@@ -17,7 +19,7 @@ for imgPath in myList:
     img = cv2.imread(f'{directory}/{imgPath}')
     headerImages.append(img)
 currHeader = headerImages[0]
-drawColor = (255, 0, 0) #By default Red COlor
+drawColor = (0, 0, 255) #By default Red COlor
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
 cap.set(4, 720)
@@ -45,16 +47,16 @@ while True:
             if y1 < 125:
                 if 200 < x1 < 280:
                     currHeader = headerImages[0]
-                    drawColor = (255, 0, 0) #Red
+                    drawColor = (0, 0, 255) #Red
                 elif 435 < x1 < 510:
                     currHeader = headerImages[1]
                     drawColor = (0, 255, 0) #Green
                 elif 635 < x1 < 715:
                     currHeader = headerImages[2]
-                    drawColor = (255, 255, 0) #yellow
+                    drawColor = (0, 255, 255) #yellow
                 elif 850 < x1 < 975:
                     currHeader = headerImages[3]
-                    drawColor = (0, 0 ,255) #blue
+                    drawColor = (255, 0 ,0) #blue
                 elif 1050 < x1 < 1160:
                     currHeader = headerImages[4]
         
@@ -64,10 +66,12 @@ while True:
             if(prev_x == 0 and prev_y == 0):
                 prev_x, prev_y = x1, y1
             cv2.line(img, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
+            cv2.line(imgCanvas, (prev_x,prev_y), (x1,y1), drawColor, brushWeight)
             prev_x, prev_y = x1, y1
     #set the header image
     img[0:125, 0:1280] = currHeader
     cv2.imshow("Feed", img)
+    cv2.imshow("Canvas", imgCanvas)
     cv2.waitKey(1)
 
 
