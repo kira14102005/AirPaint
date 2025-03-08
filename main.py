@@ -42,6 +42,8 @@ while True:
         print(fingers)
 
         if(fingers[1] and fingers[2]):
+            prev_x, prev_y = 0, 0
+            #Selection Mode
             cv2.rectangle(img, (x1,y1-25), (x2,y2+25), drawColor, cv2.FILLED)
 
             print("Selection Mode")
@@ -76,6 +78,7 @@ while True:
             prev_x, prev_y = x1, y1
     #set the header image
     img[0:125, 0:1280] = currHeader
+    img = cv2.addWeighted(img, 0.5, imgCanvas, 0.5, 0)
     cv2.imshow("Feed", img)
     cv2.imshow("Canvas", imgCanvas)
     cv2.waitKey(1)
