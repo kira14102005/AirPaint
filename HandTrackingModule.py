@@ -41,18 +41,25 @@ class handDetectorObj():
     
     def noOfFingersUp(self):
         fingers = []
-        #Thumb
-        if self.lmList[4][1] < self.lmList[3][1]:
+
+        # Thumb (Check Left vs Right Hand)
+        if len(self.lmList) == 0:
+            return fingers  # Return empty if no hand detected
+
+        if self.lmList[4][1] > self.lmList[3][1]:  # Right Hand
             fingers.append(1)
-        else:
+        else:  # Left Hand
             fingers.append(0)
-        #4 Fingers
+
+        # 4 Fingers (Index, Middle, Ring, Pinky)
         for id in range(1, 5):
-            if self.lmList[id*4][2] < self.lmList[id*4 - 2][2]:
+            if self.lmList[self.fingerTips[id]][2] < self.lmList[self.fingerTips[id] - 2][2]:  
                 fingers.append(1)
             else:
                 fingers.append(0)
+        
         return fingers
+
 
 def main():
     prevTime = 0
@@ -68,6 +75,8 @@ def main():
             print(lmList[4]) #print the fourth landmark of the hand which is the tip of the thumb
         fps = 1/(curTime-prevTime)    
         prevTime = curTime
+        # fingers = detect.noOfFingersUp()
+        # print(fingers)
         cv2.putText(img, f"FPS: {int(fps)}", (10,  70), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 0, 255), 3)
         cv2.imshow("Image", img) 
         cv2.waitKey(1)
