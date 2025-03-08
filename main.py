@@ -13,6 +13,7 @@ for imgPath in myList:
     img = cv2.imread(f'{directory}/{imgPath}')
     headerImages.append(img)
 currHeader = headerImages[0]
+drawColor = (255, 0, 0) #By default Red COlor
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
 cap.set(4, 720)
@@ -34,23 +35,27 @@ while True:
         print(fingers)
 
         if(fingers[1] and fingers[2]):
-            cv2.rectangle(img, (x1,y1-25), (x2,y2+25), (255,0,255), cv2.FILLED)
+            cv2.rectangle(img, (x1,y1-25), (x2,y2+25), drawColor, cv2.FILLED)
             print("Selection Mode")
             if y1 < 125:
                 if 200 < x1 < 280:
                     currHeader = headerImages[0]
+                    drawColor = (255, 0, 0) #Red
                 elif 435 < x1 < 510:
                     currHeader = headerImages[1]
+                    drawColor = (0, 255, 0) #Green
                 elif 635 < x1 < 715:
                     currHeader = headerImages[2]
+                    drawColor = (255, 255, 0) #yellow
                 elif 850 < x1 < 975:
                     currHeader = headerImages[3]
+                    drawColor = (0, 0 ,255) #blue
                 elif 1050 < x1 < 1160:
                     currHeader = headerImages[4]
             #Checking for the header change
         
         if(fingers[1] and fingers[2] == False):
-            cv2.circle(img, (x1,y1), 15, (255,0,255), cv2.FILLED)
+            cv2.circle(img, (x1,y1), 15, drawColor, cv2.FILLED)
             print("Drawing Mode")
     #set the header image
     img[0:125, 0:1280] = currHeader
